@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 
+	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/client/restclient"
 	client "k8s.io/kubernetes/pkg/client/unversioned"
 )
@@ -22,9 +23,12 @@ type RC struct {
 }
 
 type Pod struct {
-	Name      string
-	Namespace string
-	NodeName  string
+	Name            string
+	Namespace       string
+	NodeName        string
+	Phase           api.PodPhase
+	TotalContainers int
+	ReadyContainers int
 }
 
 func New() *client.Client {

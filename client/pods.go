@@ -18,10 +18,19 @@ func GetPods() {
 			return
 		}
 		for _, pod := range podList.Items {
+			readyContainers := 0
+			for _, cs := range pod.Status.ContainerStatuses {
+				if cs.Ready {
+					readyContainers++
+				}
+			}
 			p := Pod{
-				Name:      pod.ObjectMeta.Name,
-				Namespace: pod.ObjectMeta.Namespace,
-				NodeName:  pod.Spec.NodeName,
+				Name:            pod.ObjectMeta.Name,
+				Namespace:       pod.ObjectMeta.Namespace,
+				NodeName:        pod.Spec.NodeName,
+				Phase:           pod.Status.Phase,
+				TotalContainers: len(pod.Status.ContainerStatuses),
+				ReadyContainers: readyContainers,
 			}
 			Pods = append(Pods, p)
 		}
@@ -31,7 +40,7 @@ func GetPods() {
 func ListPodsByNamespace() {
 	fmt.Printf("Pods:\n\n")
 	for _, v := range Pods {
-		fmt.Printf("\t%s/%s\n", v.Namespace, v.Name)
+		fmt.Printf("\tStatus: %s; Ready: %d of %d; %s/%s\n", v.Phase, v.ReadyContainers, v.TotalContainers, v.Namespace, v.Name)
 	}
 	fmt.Printf("\n")
 }
