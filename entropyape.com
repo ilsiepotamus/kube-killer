@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ilsiepotamus/kube-killer/client"
+	"github.com/ilsiepotamus/entropyape/client"
 )
 
 func main() {
