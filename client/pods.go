@@ -6,12 +6,15 @@ import (
 	"k8s.io/kubernetes/pkg/api"
 )
 
-func GetPods() {
+func GetPods(namespaces ...string) {
 	Pods = []Pod{}
-	GetNamespaces()
-
+	if len(namespaces) == 0 {
+		namespaces = GetNamespaces()
+	} else {
+		namespaces = ValidateNamespaces(namespaces...)
+	}
 	// get pods
-	for _, ns := range Namespaces {
+	for _, ns := range namespaces {
 		podList, err := c.Pods(ns).List(api.ListOptions{})
 		if err != nil {
 			fmt.Println(err)
@@ -31,6 +34,7 @@ func GetPods() {
 				Phase:           pod.Status.Phase,
 				TotalContainers: len(pod.Status.ContainerStatuses),
 				ReadyContainers: readyContainers,
+				Definition:      &pod,
 			}
 			Pods = append(Pods, p)
 		}

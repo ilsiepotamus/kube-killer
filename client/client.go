@@ -10,7 +10,7 @@ import (
 
 var Nodes []string
 var Namespaces []string
-var RCs []RC
+var RCs map[string]RC
 var Pods []Pod
 var c *client.Client
 
@@ -20,6 +20,7 @@ type RC struct {
 	Replicas          int32
 	ReadyReplicas     int32
 	AvailableReplicas int32
+	Definition        *api.ReplicationController
 }
 
 type Pod struct {
@@ -29,6 +30,7 @@ type Pod struct {
 	Phase           api.PodPhase
 	TotalContainers int
 	ReadyContainers int
+	Definition      *api.Pod
 }
 
 func New() *client.Client {
@@ -43,4 +45,8 @@ func New() *client.Client {
 	}
 
 	return c
+}
+
+func Snapshot() {
+
 }
